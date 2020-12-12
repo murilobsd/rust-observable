@@ -37,16 +37,20 @@ impl EventManager {
         self.listeners.insert(operation, Vec::new());
     }
 
-    fn subscribe(&mut self, event_type: String, listener: Box<dyn EventListener>) {
-        match self.listeners.get_mut(&event_type) {
+    fn subscribe(&mut self, event_type: &str, listener: Box<dyn EventListener>) {
+        match self.listeners.get_mut(event_type) {
             Some(event) => event.push(listener),
             None => println!("{} not fount event type.", event_type),
         }
     }
 
-    fn unsubscribe(&mut self, event_type: String) {
-        match self.listeners.remove(&event_type) {
-            Some(_) => println!("removido"),
+    fn unsubscribe(&mut self, event_type: &str) {
+        match self.listeners.get_mut(event_type) {
+            Some(event) => {
+                event.clear();
+                self.listeners.remove(event_type);
+                println!("Event: {} removido", &event_type);
+            }
             None => println!("{} not fount event type.", event_type),
         }
     }
@@ -81,17 +85,18 @@ impl Car {
 }
 
 fn main() {
-    let email: String = "mbsd@teste.com.br".to_string();
-    let email_safety: String = "safety@teste.com.br".to_string();
+    let email: String = String::from("mbsd@teste.com.br");
+    let email_safety: String = String::from("safety@teste.com.br");
+    let event_type: String = String::from("MotorLigado");
 
     let mut car: Car = Car::new();
-    let event_type: String = "MotorLigado".to_string();
-    let event_type_safe = event_type.clone();
     let email_list = Box::new(EmailNotificationListener::new(email));
     let email_list_safe = Box::new(EmailNotificationListener::new(email_safety));
 
-    car.events.subscribe(event_type, email_list);
-    car.events.subscribe(event_type_safe, email_list_safe);
+    car.events.subscribe(&event_type, email_list);
+    car.events.subscribe(&event_type, email_list_safe);
 
     car.ligar();
+
+    car.events.unsubscribe(&event_type);
 }
