@@ -83,8 +83,8 @@ impl Car {
 }
 
 fn main() {
-    let email: String = "murilo.ijanc@kovi.com.br".to_string();
-    let email_safety: String = "safety@kovi.com.br".to_string();
+    let email: String = "mbsd@teste.com.br".to_string();
+    let email_safety: String = "safety@teste.com.br".to_string();
 
     let mut car: Car = Car::new();
     let event_type: String = "MotorLigado".to_string();
