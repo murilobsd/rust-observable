@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use std::boxed::Box;
+use std::collections::HashMap;
 
 trait EventListener {
     fn update(&self, event_type: String);
@@ -12,24 +12,25 @@ struct EmailNotificationListener {
 
 impl EmailNotificationListener {
     fn new(email: String) -> Self {
-        Self {email}
+        Self { email }
     }
 }
 
 impl EventListener for EmailNotificationListener {
-
     fn update(&self, event_type: String) {
         println!("Email: {} Event Type: {}", self.email, event_type);
     }
 }
 
 struct EventManager {
-    listeners: HashMap<String, Vec<Box<dyn EventListener>>>
+    listeners: HashMap<String, Vec<Box<dyn EventListener>>>,
 }
 
 impl EventManager {
     fn new() -> Self {
-        Self{listeners: HashMap::new()}
+        Self {
+            listeners: HashMap::new(),
+        }
     }
 
     fn insert(&mut self, operation: String) {
@@ -39,14 +40,14 @@ impl EventManager {
     fn subscribe(&mut self, event_type: String, listener: Box<dyn EventListener>) {
         match self.listeners.get_mut(&event_type) {
             Some(event) => event.push(listener),
-            None => println!("{} not fount event type.", event_type)
+            None => println!("{} not fount event type.", event_type),
         }
     }
 
     fn unsubscribe(&mut self, event_type: String) {
         match self.listeners.remove(&event_type) {
             Some(_) => println!("removido"),
-            None => println!("{} not fount event type.", event_type)
+            None => println!("{} not fount event type.", event_type),
         }
     }
 
@@ -56,15 +57,14 @@ impl EventManager {
                 for e in event.iter() {
                     e.update(event_type.clone());
                 }
-            },
-            None => println!("{} not fount event type.", event_type)
+            }
+            None => println!("{} not fount event type.", event_type),
         }
     }
-
 }
 
 struct Car {
-    events: EventManager
+    events: EventManager,
 }
 
 impl Car {
@@ -72,9 +72,7 @@ impl Car {
         let mut event = EventManager::new();
         event.insert("MotorLigado".to_string());
 
-        Self {
-            events: event,
-        }
+        Self { events: event }
     }
 
     fn ligar(&mut self) {
